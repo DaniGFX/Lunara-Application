@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   PieChart, 
   AlertTriangle, 
@@ -21,6 +21,8 @@ import {
 import { formatPHP, parsePhilippinePesoInput } from '../utils/currency';
 import { roundCurrency } from '../utils/calculations';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { getBudgetForMonth, saveBudget } from '../services/budgetService';
+import { getCurrentMonthKey } from '../utils/dateUtils';
 
 const ICON_MAP = {
   Food: Coffee,
@@ -45,6 +47,7 @@ const DEFAULT_CATEGORY_LIMITS = {
 
 export default function BudgetsScreen({ transactions = [], user }) {
   const isDemo = Boolean(user?.isDemo);
+  const currentMonthKey = getCurrentMonthKey();
   const [totalLimit, setTotalLimit] = useState(35000);
   const [categoryLimits, setCategoryLimits] = useState(DEFAULT_CATEGORY_LIMITS);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -53,6 +56,24 @@ export default function BudgetsScreen({ transactions = [], user }) {
 
   // Lock background scroll when adjust budget modal is open
   useBodyScrollLock(isEditModalOpen);
+
+  // Load real user's budget from Supabase
+  useEffect(() => {
+    if (!user || user.isDemo) return;
+
+    getBudgetForMonth(user.id, currentMonthKey).then((res) => {
+      if (res.data) {
+        if (res.data.total_limit) setTotalLimit(parseFloat(res.data.total_limit));
+        if (res.data.budget_categories && res.data.budget_categories.length > 0) {
+          const map = {};
+          res.data.budget_categories.forEach((bc) => {
+            map[bc.category_name] = parseFloat(bc.limit_amount);
+          });
+          setCategoryLimits((prev) => ({ ...prev, ...map }));
+        }
+      }
+    });
+  }, [user, currentMonthKey]);
 
   // Baseline expenses offset for Sofia's demo; real users start strictly with actual logged transactions
   const baselineCategorySpent = isDemo ? {
@@ -105,14 +126,19 @@ export default function BudgetsScreen({ transactions = [], user }) {
     setIsEditModalOpen(true);
   };
 
-  const handleSaveBudget = (e) => {
+  const handleSaveBudget = async (e) => {
     e.preventDefault();
-    const parsedTotal = parsePhilippinePesoInput(tempTotalLimit);
+    const parsedTotal = parsePhilippinePesoInput(tempTotalLimit) || totalLimit;
     if (parsedTotal > 0) {
       setTotalLimit(parsedTotal);
     }
     setCategoryLimits(tempCategoryLimits);
     setIsEditModalOpen(false);
+
+    // Sync to Supabase
+    if (user && !user.isDemo) {
+      await saveBudget(user.id, currentMonthKey, parsedTotal, tempCategoryLimits);
+    }
   };
 
   return (

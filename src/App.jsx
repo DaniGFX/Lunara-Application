@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeScreen from './pages/HomeScreen';
 import TransactionsScreen from './pages/TransactionsScreen';
 import BudgetsScreen from './pages/BudgetsScreen';
@@ -8,6 +8,7 @@ import AuthScreen from './pages/AuthScreen';
 import AddTransactionModal from './components/AddTransactionModal';
 import SplashScreen from './components/SplashScreen';
 import { getSavedSession, signOut as authSignOut } from './services/authService';
+import { getTransactions, addTransaction, removeTransaction } from './services/transactionService';
 import { 
   Home, 
   ArrowLeftRight, 
@@ -102,8 +103,24 @@ export default function App() {
   });
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+  // Load transactions from Supabase for real users or load Demo data for Sofia
+  useEffect(() => {
+    if (!currentUser) return;
+
+    if (currentUser.isDemo) {
+      setTransactions(INITIAL_TRANSACTIONS);
+    } else {
+      getTransactions(currentUser.id).then((res) => {
+        if (!res.error) {
+          setTransactions(res.data);
+        }
+      });
+    }
+  }, [currentUser]);
+
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
+    setActiveTab('home'); // Always land on the Dashboard when logging in
     if (user?.isDemo) {
       setTransactions(INITIAL_TRANSACTIONS);
     } else {
@@ -114,6 +131,7 @@ export default function App() {
   const handleSignOut = async () => {
     await authSignOut();
     setCurrentUser(null);
+    setActiveTab('home'); // Reset active tab to home on sign out
   };
 
   const navItems = [
@@ -124,12 +142,29 @@ export default function App() {
     { id: 'profile', label: 'Profile', Icon: User },
   ];
 
-  const handleAddTransaction = (newTx) => {
+  const handleAddTransaction = async (newTx) => {
+    // 1. Optimistic update
     setTransactions((prev) => [newTx, ...prev]);
+
+    // 2. Real-time Supabase cloud sync
+    if (currentUser && !currentUser.isDemo) {
+      const res = await addTransaction(currentUser.id, newTx);
+      if (res.data) {
+        setTransactions((prev) =>
+          prev.map((t) => (t.id === newTx.id ? res.data : t))
+        );
+      }
+    }
   };
 
-  const handleDeleteTransaction = (txId) => {
+  const handleDeleteTransaction = async (txId) => {
+    // 1. Optimistic update
     setTransactions((prev) => prev.filter((t) => t.id !== txId));
+
+    // 2. Real-time Supabase cloud deletion
+    if (currentUser && !currentUser.isDemo) {
+      await removeTransaction(currentUser.id, txId);
+    }
   };
 
   const handleResetDemoData = () => {

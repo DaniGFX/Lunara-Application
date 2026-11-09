@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sprout, 
   Plus, 
@@ -24,6 +24,12 @@ import {
 import { formatPHP, parsePhilippinePesoInput } from '../utils/currency';
 import { roundCurrency } from '../utils/calculations';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
+import { 
+  getSavingsGoals, 
+  createSavingsGoal, 
+  addSavingsContribution, 
+  deleteSavingsGoal 
+} from '../services/savingsService';
 
 const GOAL_ICONS = [
   { id: 'ShieldCheck', label: 'Safety', Icon: ShieldCheck },
@@ -78,6 +84,17 @@ export default function SavingsScreen({ user }) {
   // Lock background scroll when any modal is active
   useBodyScrollLock(isNewGoalModalOpen || Boolean(depositGoal) || Boolean(goalToDelete));
 
+  // Load real user's savings goals from Supabase
+  useEffect(() => {
+    if (!user || user.isDemo) return;
+
+    getSavingsGoals(user.id).then((res) => {
+      if (res.data) {
+        setGoals(res.data);
+      }
+    });
+  }, [user]);
+
   // New goal form state
   const [newGoalName, setNewGoalName] = useState('');
   const [newGoalTargetStr, setNewGoalTargetStr] = useState('');
@@ -92,7 +109,7 @@ export default function SavingsScreen({ user }) {
   const completedGoalsCount = goals.filter(g => g.currentAmount >= g.targetAmount).length;
 
   // Add Contribution to a goal
-  const handleDepositSubmit = (e) => {
+  const handleDepositSubmit = async (e) => {
     e.preventDefault();
     const amount = parsePhilippinePesoInput(depositAmountStr);
 
@@ -101,10 +118,13 @@ export default function SavingsScreen({ user }) {
       return;
     }
 
+    const targetGoal = depositGoal;
+    const newAmount = roundCurrency(targetGoal.currentAmount + amount);
+
+    // Optimistic update
     setGoals((prev) =>
       prev.map((g) => {
-        if (g.id === depositGoal.id) {
-          const newAmount = roundCurrency(g.currentAmount + amount);
+        if (g.id === targetGoal.id) {
           return { ...g, currentAmount: newAmount };
         }
         return g;
@@ -114,10 +134,15 @@ export default function SavingsScreen({ user }) {
     setDepositGoal(null);
     setDepositAmountStr('');
     setDepositError('');
+
+    // Cloud sync to Supabase
+    if (user && !user.isDemo) {
+      await addSavingsContribution(user.id, targetGoal.id, amount, targetGoal.currentAmount);
+    }
   };
 
   // Create New Goal
-  const handleCreateGoalSubmit = (e) => {
+  const handleCreateGoalSubmit = async (e) => {
     e.preventDefault();
     const target = parsePhilippinePesoInput(newGoalTargetStr);
 
@@ -141,19 +166,36 @@ export default function SavingsScreen({ user }) {
       color: '#9B87D4',
     };
 
+    // Optimistic update
     setGoals((prev) => [newGoal, ...prev]);
     setIsNewGoalModalOpen(false);
     setNewGoalName('');
     setNewGoalTargetStr('');
     setNewGoalDate('');
     setNewGoalError('');
+
+    // Cloud sync to Supabase
+    if (user && !user.isDemo) {
+      const res = await createSavingsGoal(user.id, newGoal);
+      if (res.data) {
+        setGoals((prev) =>
+          prev.map((g) => (g.id === newGoal.id ? { ...g, id: res.data.id } : g))
+        );
+      }
+    }
   };
 
   // Confirm and delete goal
-  const handleDeleteGoal = () => {
+  const handleDeleteGoal = async () => {
     if (goalToDelete) {
-      setGoals((prev) => prev.filter((g) => g.id !== goalToDelete.id));
+      const idToDelete = goalToDelete.id;
+      setGoals((prev) => prev.filter((g) => g.id !== idToDelete));
       setGoalToDelete(null);
+
+      // Cloud deletion from Supabase
+      if (user && !user.isDemo) {
+        await deleteSavingsGoal(user.id, idToDelete);
+      }
     }
   };
 
