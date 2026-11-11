@@ -194,6 +194,12 @@ export default function App() {
     <div className="min-h-screen bg-[#F0EBF8] flex justify-center items-start">
       {/* Mobile Screen Container Frame */}
       <div className="w-full max-w-md min-h-screen bg-[#F8F6FC] shadow-xl relative flex flex-col overflow-x-hidden pt-[env(safe-area-inset-top,0px)]">
+        {/* Fixed Top Status Bar Shield: Guarantees scrolling content never extends into or overlaps the phone's top bar */}
+        <div 
+          aria-hidden="true" 
+          className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-[env(safe-area-inset-top,0px)] bg-[#F8F6FC] z-40 pointer-events-none" 
+        />
+
         {/* If user is not authenticated, render Login / Sign Up */}
         {!currentUser ? (
           <AuthScreen onAuthSuccess={handleAuthSuccess} />
