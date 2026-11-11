@@ -35,6 +35,10 @@ body {
 }
 
 /* Mobile Safe Area Padding */
+.pt-safe-top {
+  padding-top: max(1.25rem, calc(var(--sat) + 0.75rem));
+}
+
 .pt-safe {
   padding-top: max(0.75rem, var(--sat));
 }

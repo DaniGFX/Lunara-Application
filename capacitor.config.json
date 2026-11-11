@@ -1,6 +1,13 @@
 {
   "appId": "com.lunara.app",
   "appName": "LUNARA",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "LIGHT",
+      "backgroundColor": "#F8F6FC"
+    }
+  }
 }
 

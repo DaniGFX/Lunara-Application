@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import HomeScreen from './pages/HomeScreen';
 import TransactionsScreen from './pages/TransactionsScreen';
 import BudgetsScreen from './pages/BudgetsScreen';
@@ -103,6 +105,23 @@ export default function App() {
   });
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+  // Configure native Android status bar (visible clock, battery, icons on light background)
+  useEffect(() => {
+    const initStatusBar = async () => {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          await StatusBar.setOverlaysWebView({ overlay: false });
+          await StatusBar.setStyle({ style: Style.Light }); // Dark icons on light lavender canvas
+          await StatusBar.setBackgroundColor({ color: '#F8F6FC' });
+          await StatusBar.show();
+        } catch (err) {
+          console.warn('Native status bar configuration:', err);
+        }
+      }
+    };
+    initStatusBar();
+  }, []);
+
   // Load transactions from Supabase for real users or load Demo data for Sofia
   useEffect(() => {
     if (!currentUser) return;
@@ -174,7 +193,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F0EBF8] flex justify-center items-start">
       {/* Mobile Screen Container Frame */}
-      <div className="w-full max-w-md min-h-screen bg-[#F8F6FC] shadow-xl relative flex flex-col overflow-x-hidden">
+      <div className="w-full max-w-md min-h-screen bg-[#F8F6FC] shadow-xl relative flex flex-col overflow-x-hidden pt-[env(safe-area-inset-top,0px)]">
         {/* If user is not authenticated, render Login / Sign Up */}
         {!currentUser ? (
           <AuthScreen onAuthSuccess={handleAuthSuccess} />
