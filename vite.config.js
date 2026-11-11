@@ -15,6 +15,9 @@ export default defineConfig({
     host: true, // Listens on 0.0.0.0 so phone can connect via LAN IP
     port: 5173,
     open: false,
+    watch: {
+      ignored: ['**/android/**', '**/dist/**'],
+    },
   },
   build: {
     outDir: 'dist',
