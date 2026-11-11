@@ -11,7 +11,8 @@ import {
   CheckCircle2, 
   AlertCircle,
   X,
-  KeyRound
+  KeyRound,
+  Smartphone
 } from 'lucide-react';
 import { signIn, signUp, resetPassword, DEMO_USER } from '../services/authService';
 import logoImg from '../assets/logo.jpg';
@@ -321,9 +322,19 @@ export default function AuthScreen({ onAuthSuccess }) {
       </div>
 
       {/* Security Footnote */}
-      <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-[#7A7289] pt-4 text-center">
-        <ShieldCheck className="w-3.5 h-3.5 text-[#9B87D4]" />
-        <span>Protected by Supabase Authentication • 256-bit encryption</span>
+      <div className="flex flex-col items-center justify-center gap-2 pt-4 text-center">
+        <a
+          href="./landing.html"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAE3FA]/70 hover:bg-[#EAE3FA] text-[#574477] text-[11px] font-bold border border-[#9B87D4]/30 transition shadow-xs"
+        >
+          <Smartphone className="w-3.5 h-3.5 text-[#9B87D4]" />
+          <span>Get Native Android APK</span>
+        </a>
+
+        <div className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-[#7A7289]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#9B87D4]" />
+          <span>Protected by Supabase Authentication • 256-bit encryption</span>
+        </div>
       </div>
 
       {/* Forgot Password Modal */}

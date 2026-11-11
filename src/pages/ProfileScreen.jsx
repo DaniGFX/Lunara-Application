@@ -14,7 +14,8 @@ import {
   Download, 
   RefreshCw,
   AlertTriangle,
-  X
+  X,
+  Smartphone
 } from 'lucide-react';
 import { checkSupabaseConnection } from '../services/supabaseClient';
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
@@ -237,6 +238,18 @@ export default function ProfileScreen({ user, onSignOut, onResetDemoData, onRepl
             <ChevronRight className="w-4 h-4 text-[#9E97A9]" />
           </button>
         )}
+
+        {/* Download Android APK Landing */}
+        <a
+          href="./landing.html"
+          className="w-full py-3 px-3 rounded-2xl bg-[#F8F6FC] hover:bg-[#F3EEFB] text-[#574477] font-bold text-xs flex items-center justify-between transition"
+        >
+          <div className="flex items-center gap-2.5">
+            <Smartphone className="w-4 h-4 text-[#9B87D4]" />
+            <span>Download Android App (.APK)</span>
+          </div>
+          <ChevronRight className="w-4 h-4 text-[#9E97A9]" />
+        </a>
 
         {/* Reset Demo Data */}
         <button
