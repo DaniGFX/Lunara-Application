@@ -152,145 +152,151 @@ export default function TransactionsScreen({
   };
 
   return (
-    <div className="px-5 pt-4 pb-28 space-y-4">
+    <div className="px-5 sm:px-8 pt-4 sm:pt-6 pb-28 sm:pb-32 space-y-4 sm:space-y-5">
       {/* Top Header */}
       <div className="flex justify-between items-center pt-2">
         <div>
           <span className="text-[11px] font-bold text-[#7A7289] tracking-widest uppercase block">
             HISTORY & RECORDS
           </span>
-          <h1 className="text-3xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
+          <h1 className="text-3xl sm:text-4xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
             Transactions
           </h1>
         </div>
         <button
           type="button"
           onClick={onOpenAddTransaction}
-          className="h-10 px-3.5 bg-[#9B87D4] hover:bg-[#8B75C7] text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
+          className="h-10 sm:h-11 px-3.5 sm:px-5 bg-[#9B87D4] hover:bg-[#8B75C7] text-white text-xs sm:text-sm font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
         >
           <Plus className="w-4 h-4" />
           <span>Add</span>
         </button>
       </div>
 
-      {/* Month Selector Bar */}
-      <div className="bg-white rounded-2xl p-2 border border-[#F0EBF8] shadow-xs flex items-center justify-between">
-        <button
-          type="button"
-          title="Previous Month"
-          onClick={handlePrevMonth}
-          className="w-9 h-9 rounded-xl hover:bg-[#F3EEFB] text-[#574477] flex items-center justify-center transition"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setIsMonthPickerOpen(true)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-[#F8F6FC] transition"
-        >
-          <Calendar className="w-4 h-4 text-[#9B87D4]" />
-          <span className="text-sm font-extrabold text-[#2C1E4A]">
-            {currentMonthLabel}
-          </span>
-          <span className="text-[10px] bg-[#EAE3FA] text-[#574477] font-bold px-2 py-0.5 rounded-full">
-            Change
-          </span>
-        </button>
-
-        <button
-          type="button"
-          title="Next Month"
-          onClick={handleNextMonth}
-          className="w-9 h-9 rounded-xl hover:bg-[#F3EEFB] text-[#574477] flex items-center justify-center transition"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Summary Card for Selected Month */}
-      <div className="bg-white rounded-2xl p-4 border border-[#F0EBF8] shadow-xs flex justify-between items-center">
-        <div>
-          <span className="text-[11px] font-semibold text-[#7A7289] block">Total In</span>
-          <span className="text-sm font-black text-emerald-600">+{formatPHP(filteredIncome)}</span>
-        </div>
-        <div className="h-8 w-px bg-[#F0EBF8]" />
-        <div>
-          <span className="text-[11px] font-semibold text-[#7A7289] block">Total Out</span>
-          <span className="text-sm font-black text-rose-500">-{formatPHP(filteredExpenses)}</span>
-        </div>
-        <div className="h-8 w-px bg-[#F0EBF8]" />
-        <div>
-          <span className="text-[11px] font-semibold text-[#7A7289] block">Net Flow</span>
-          <span className={`text-sm font-black ${
-            netCashFlow >= 0 ? 'text-[#2C1E4A]' : 'text-rose-500'
-          }`}>
-            {formatPHP(netCashFlow)}
-          </span>
-        </div>
-      </div>
-
-      {/* Search Input */}
-      <div className="relative flex items-center">
-        <Search className="absolute left-3.5 w-4 h-4 text-[#7A7289]" />
-        <input
-          type="text"
-          placeholder={`Search ${currentMonthLabel} records...`}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-10 py-2.5 bg-white rounded-2xl border border-[#F0EBF8] focus:border-[#9B87D4] text-sm font-medium text-[#2C1E4A] outline-none transition placeholder:text-[#9E97A9] shadow-xs"
-        />
-        {searchQuery && (
+      {/* Month Selector & Summary Row (Stacked on Mobile, 2-Column on Tablet) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Month Selector Bar */}
+        <div className="bg-white rounded-2xl p-2 sm:p-3 border border-[#F0EBF8] shadow-xs flex items-center justify-between">
           <button
             type="button"
-            onClick={() => setSearchQuery('')}
-            className="absolute right-3 text-[#7A7289] hover:text-[#2C1E4A]"
+            title="Previous Month"
+            onClick={handlePrevMonth}
+            className="w-9 h-9 rounded-xl hover:bg-[#F3EEFB] text-[#574477] flex items-center justify-center transition"
           >
-            <X className="w-4 h-4" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
-        )}
+
+          <button
+            type="button"
+            onClick={() => setIsMonthPickerOpen(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-[#F8F6FC] transition"
+          >
+            <Calendar className="w-4 h-4 text-[#9B87D4]" />
+            <span className="text-sm font-extrabold text-[#2C1E4A]">
+              {currentMonthLabel}
+            </span>
+            <span className="text-[10px] bg-[#EAE3FA] text-[#574477] font-bold px-2 py-0.5 rounded-full">
+              Change
+            </span>
+          </button>
+
+          <button
+            type="button"
+            title="Next Month"
+            onClick={handleNextMonth}
+            className="w-9 h-9 rounded-xl hover:bg-[#F3EEFB] text-[#574477] flex items-center justify-center transition"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Summary Card for Selected Month */}
+        <div className="bg-white rounded-2xl p-4 border border-[#F0EBF8] shadow-xs flex justify-between items-center">
+          <div>
+            <span className="text-[11px] font-semibold text-[#7A7289] block">Total In</span>
+            <span className="text-sm font-black text-emerald-600">+{formatPHP(filteredIncome)}</span>
+          </div>
+          <div className="h-8 w-px bg-[#F0EBF8]" />
+          <div>
+            <span className="text-[11px] font-semibold text-[#7A7289] block">Total Out</span>
+            <span className="text-sm font-black text-rose-500">-{formatPHP(filteredExpenses)}</span>
+          </div>
+          <div className="h-8 w-px bg-[#F0EBF8]" />
+          <div>
+            <span className="text-[11px] font-semibold text-[#7A7289] block">Net Flow</span>
+            <span className={`text-sm font-black ${
+              netCashFlow >= 0 ? 'text-[#2C1E4A]' : 'text-rose-500'
+            }`}>
+              {formatPHP(netCashFlow)}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Filter Tabs: All | Expenses | Income */}
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => setTypeFilter('all')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-            typeFilter === 'all'
-              ? 'bg-[#2C1E4A] text-white shadow-xs'
-              : 'bg-white border border-[#F0EBF8] text-[#574477] hover:bg-[#F3EEFB]'
-          }`}
-        >
-          All ({filteredTransactions.length})
-        </button>
-        <button
-          type="button"
-          onClick={() => setTypeFilter('expense')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-            typeFilter === 'expense'
-              ? 'bg-rose-500 text-white shadow-xs'
-              : 'bg-white border border-[#F0EBF8] text-rose-500 hover:bg-rose-50'
-          }`}
-        >
-          Expenses
-        </button>
-        <button
-          type="button"
-          onClick={() => setTypeFilter('income')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-            typeFilter === 'income'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'bg-white border border-[#F0EBF8] text-emerald-600 hover:bg-emerald-50'
-          }`}
-        >
-          Income
-        </button>
+      {/* Search & Filter Row (Stacked on Mobile, 2-Column on Tablet) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-center">
+        {/* Search Input */}
+        <div className="relative flex items-center">
+          <Search className="absolute left-3.5 w-4 h-4 text-[#7A7289]" />
+          <input
+            type="text"
+            placeholder={`Search ${currentMonthLabel} records...`}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-10 py-2.5 bg-white rounded-2xl border border-[#F0EBF8] focus:border-[#9B87D4] text-sm font-medium text-[#2C1E4A] outline-none transition placeholder:text-[#9E97A9] shadow-xs"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 text-[#7A7289] hover:text-[#2C1E4A]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Filter Tabs: All | Expenses | Income */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setTypeFilter('all')}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              typeFilter === 'all'
+                ? 'bg-[#2C1E4A] text-white shadow-xs'
+                : 'bg-white border border-[#F0EBF8] text-[#574477] hover:bg-[#F3EEFB]'
+            }`}
+          >
+            All ({filteredTransactions.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTypeFilter('expense')}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              typeFilter === 'expense'
+                ? 'bg-rose-500 text-white shadow-xs'
+                : 'bg-white border border-[#F0EBF8] text-rose-500 hover:bg-rose-50'
+            }`}
+          >
+            Expenses
+          </button>
+          <button
+            type="button"
+            onClick={() => setTypeFilter('income')}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              typeFilter === 'income'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-white border border-[#F0EBF8] text-emerald-600 hover:bg-emerald-50'
+            }`}
+          >
+            Income
+          </button>
+        </div>
       </div>
 
       {/* Category Horizontal Filter Pills */}
       {availableCategories.length > 2 && (
-        <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-5 px-5">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-5 px-5 sm:mx-0 sm:px-0">
           {availableCategories.map((cat) => (
             <button
               key={cat}

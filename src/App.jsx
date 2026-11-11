@@ -191,13 +191,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0EBF8] flex justify-center items-start">
-      {/* Mobile Screen Container Frame */}
-      <div className="w-full max-w-md min-h-screen bg-[#F8F6FC] shadow-xl relative flex flex-col overflow-x-hidden pt-[env(safe-area-inset-top,0px)]">
-        {/* Fixed Top Status Bar Shield: Guarantees scrolling content never extends into or overlaps the phone's top bar */}
+    <div className="min-h-screen bg-[#F8F6FC] flex justify-center items-start">
+      {/* Mobile & Tablet Responsive Container Frame */}
+      <div className="w-full max-w-5xl min-h-screen bg-[#F8F6FC] shadow-xl lg:shadow-2xl lg:border-x lg:border-[#F0EBF8] relative flex flex-col overflow-x-hidden pt-[env(safe-area-inset-top,0px)]">
+        {/* Fixed Top Status Bar Shield: Guarantees scrolling content never extends into or overlaps the device's top bar */}
         <div 
           aria-hidden="true" 
-          className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-[env(safe-area-inset-top,0px)] bg-[#F8F6FC] z-40 pointer-events-none" 
+          className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[env(safe-area-inset-top,0px)] bg-[#F8F6FC] z-40 pointer-events-none" 
         />
 
         {/* If user is not authenticated, render Login / Sign Up */}
@@ -252,8 +252,8 @@ export default function App() {
               onAddTransaction={handleAddTransaction}
             />
 
-            {/* Bottom Tab Bar (Fixed at Bottom of Mobile Container) */}
-            <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-[#F0EBF8] px-4 py-2 z-40 flex justify-around items-center">
+            {/* Bottom Tab Bar (Fixed at Bottom of Responsive Container) */}
+            <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-5xl bg-white/95 backdrop-blur-md border-t lg:border-x lg:rounded-t-3xl border-[#F0EBF8] px-4 sm:px-8 py-2 sm:py-2.5 z-40 flex justify-around items-center shadow-lg">
               {navItems.map((item) => {
                 const isActive = activeTab === item.id;
                 const ItemIcon = item.Icon;
@@ -263,11 +263,11 @@ export default function App() {
                     key={item.id}
                     type="button"
                     onClick={() => setActiveTab(item.id)}
-                    className="flex flex-col items-center py-1 group focus:outline-none"
+                    className="flex flex-col sm:flex-row items-center sm:gap-2 py-1 sm:px-4 sm:py-1.5 rounded-2xl group focus:outline-none transition-colors"
                   >
                     {/* Active Pill Container for Icon */}
                     <div
-                      className={`w-14 h-8 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-14 sm:w-10 h-8 rounded-full flex items-center justify-center transition-all ${
                         isActive ? 'bg-[#EAE3FA]' : 'bg-transparent'
                       }`}
                     >
@@ -279,7 +279,7 @@ export default function App() {
                     </div>
                     {/* Label */}
                     <span
-                      className={`text-[11px] font-semibold mt-0.5 tracking-tight ${
+                      className={`text-[11px] sm:text-xs font-semibold mt-0.5 sm:mt-0 tracking-tight ${
                         isActive ? 'text-[#2C1E4A]' : 'text-[#9E97A9]'
                       }`}
                     >

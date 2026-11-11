@@ -44,32 +44,32 @@ export default function ProfileScreen({ user, onSignOut, onResetDemoData, onRepl
   };
 
   return (
-    <div className="px-5 pt-4 pb-28 space-y-5">
+    <div className="px-5 sm:px-8 pt-4 sm:pt-6 pb-28 sm:pb-32 space-y-5 sm:space-y-6">
       {/* Top Header */}
       <div className="pt-2">
         <span className="text-[11px] font-bold text-[#7A7289] tracking-widest uppercase block">
           ACCOUNT & PREFERENCES
         </span>
-        <h1 className="text-3xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
+        <h1 className="text-3xl sm:text-4xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
           Profile & Settings
         </h1>
       </div>
 
       {/* User Info Card */}
-      <div className="bg-[#EAE3FA] rounded-3xl p-6 shadow-xs flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-[#574477] text-2xl font-black shadow-xs shrink-0 border border-purple-100 uppercase">
+      <div className="bg-[#EAE3FA] rounded-3xl p-6 sm:p-7 shadow-xs flex items-center gap-4 sm:gap-5">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center text-[#574477] text-2xl sm:text-3xl font-black shadow-xs shrink-0 border border-purple-100 uppercase">
           {user?.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2) : 'SR'}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-extrabold text-[#2C1E4A] truncate">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-[#2C1E4A] truncate">
               {user?.name || 'Sofia Rodriguez'}
             </h2>
             <span className="px-2 py-0.5 rounded-full bg-[#9B87D4] text-white text-[10px] font-bold shrink-0">
               {user?.isDemo ? 'Demo Mode' : 'Personal'}
             </span>
           </div>
-          <p className="text-xs text-[#574477] font-medium truncate mt-0.5">
+          <p className="text-xs sm:text-sm text-[#574477] font-medium truncate mt-0.5">
             {user?.email || 'sofia.rodriguez@example.com'}
           </p>
           <p className="text-[11px] text-[#7A7289] font-medium mt-1">
@@ -78,8 +78,10 @@ export default function ProfileScreen({ user, onSignOut, onResetDemoData, onRepl
         </div>
       </div>
 
+      {/* Settings Grid: 1-Col on Mobile, 2-Col on Tablet (Samsung Tab A9) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
       {/* Currency & Financial Preferences */}
-      <div className="bg-white rounded-3xl p-5 border border-[#F0EBF8] shadow-xs space-y-4">
+      <div className="bg-white rounded-3xl p-5 border border-[#F0EBF8] shadow-xs space-y-4 h-full">
         <h3 className="text-sm font-extrabold text-[#2C1E4A] uppercase tracking-wider flex items-center gap-2">
           <Globe className="w-4 h-4 text-[#9B87D4]" />
           <span>Financial Standards</span>
@@ -289,6 +291,7 @@ export default function ProfileScreen({ user, onSignOut, onResetDemoData, onRepl
           </div>
           <ChevronRight className="w-4 h-4 text-rose-400" />
         </button>
+      </div>
       </div>
 
       {/* App Version Info */}

@@ -142,21 +142,21 @@ export default function BudgetsScreen({ transactions = [], user }) {
   };
 
   return (
-    <div className="px-5 pt-4 pb-28 space-y-5">
+    <div className="px-5 sm:px-8 pt-4 sm:pt-6 pb-28 sm:pb-32 space-y-5 sm:space-y-6">
       {/* Top Header */}
       <div className="flex justify-between items-center pt-2">
         <div>
           <span className="text-[11px] font-bold text-[#7A7289] tracking-widest uppercase block">
             MONTHLY BUDGETS
           </span>
-          <h1 className="text-3xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
+          <h1 className="text-3xl sm:text-4xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
             November 2026
           </h1>
         </div>
         <button
           type="button"
           onClick={handleOpenEdit}
-          className="h-10 px-3.5 bg-white hover:bg-[#EAE3FA] border border-[#EAE3FA] text-[#574477] text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
+          className="h-10 sm:h-11 px-3.5 sm:px-5 bg-white hover:bg-[#EAE3FA] border border-[#EAE3FA] text-[#574477] text-xs sm:text-sm font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
         >
           <Settings2 className="w-4 h-4" />
           <span>Adjust</span>
@@ -164,7 +164,7 @@ export default function BudgetsScreen({ transactions = [], user }) {
       </div>
 
       {/* Master Budget Overview Card */}
-      <div className={`rounded-3xl p-6 shadow-xs border transition-all ${
+      <div className={`rounded-3xl p-6 sm:p-7 shadow-xs border transition-all ${
         isOverBudget 
           ? 'bg-rose-50/70 border-rose-200' 
           : overallPercentage >= 85 
@@ -193,7 +193,7 @@ export default function BudgetsScreen({ transactions = [], user }) {
           <span className="text-xs font-medium text-[#7A7289] block">
             {isOverBudget ? 'Exceeded by' : 'Remaining budget'}
           </span>
-          <div className={`text-4xl font-black tracking-tight ${
+          <div className={`text-4xl sm:text-5xl font-black tracking-tight ${
             isOverBudget ? 'text-rose-600' : 'text-[#2C1E4A]'
           }`}>
             {formatPHP(Math.abs(remainingBudget))}
@@ -218,15 +218,15 @@ export default function BudgetsScreen({ transactions = [], user }) {
         <div className="grid grid-cols-3 gap-2 pt-2 border-t border-black/5 text-center">
           <div>
             <span className="text-[11px] text-[#7A7289] block">Spent</span>
-            <span className="text-sm font-bold text-[#2C1E4A]">{formatPHP(totalSpent)}</span>
+            <span className="text-sm sm:text-base font-bold text-[#2C1E4A]">{formatPHP(totalSpent)}</span>
           </div>
           <div className="border-x border-black/5">
             <span className="text-[11px] text-[#7A7289] block">Limit</span>
-            <span className="text-sm font-bold text-[#2C1E4A]">{formatPHP(totalLimit)}</span>
+            <span className="text-sm sm:text-base font-bold text-[#2C1E4A]">{formatPHP(totalLimit)}</span>
           </div>
           <div>
             <span className="text-[11px] text-[#7A7289] block">Daily Pace</span>
-            <span className="text-sm font-bold text-emerald-700">
+            <span className="text-sm sm:text-base font-bold text-emerald-700">
               {dailyAllowance > 0 ? `₱${dailyAllowance}/d` : '₱0/d'}
             </span>
           </div>
@@ -243,8 +243,8 @@ export default function BudgetsScreen({ transactions = [], user }) {
         </span>
       </div>
 
-      {/* Category Budget Cards */}
-      <div className="space-y-3">
+      {/* Category Budget Cards: 1-Col on Phone, 2-Col on Tablet */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {Object.entries(categoryLimits).map(([categoryName, limit]) => {
           const spent = categorySpending[categoryName] || 0;
           const remaining = limit - spent;

@@ -200,21 +200,21 @@ export default function SavingsScreen({ user }) {
   };
 
   return (
-    <div className="px-5 pt-4 pb-28 space-y-5">
+    <div className="px-5 sm:px-8 pt-4 sm:pt-6 pb-28 sm:pb-32 space-y-5 sm:space-y-6">
       {/* Top Header */}
       <div className="flex justify-between items-center pt-2">
         <div>
           <span className="text-[11px] font-bold text-[#7A7289] tracking-widest uppercase block">
             SAVINGS & TARGETS
           </span>
-          <h1 className="text-3xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
+          <h1 className="text-3xl sm:text-4xl font-black text-[#2C1E4A] tracking-tight mt-0.5">
             Savings Goals
           </h1>
         </div>
         <button
           type="button"
           onClick={() => setIsNewGoalModalOpen(true)}
-          className="h-10 px-3.5 bg-[#9B87D4] hover:bg-[#8B75C7] text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
+          className="h-10 sm:h-11 px-3.5 sm:px-5 bg-[#9B87D4] hover:bg-[#8B75C7] text-white text-xs sm:text-sm font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition"
         >
           <Plus className="w-4 h-4" />
           <span>New Goal</span>
@@ -222,7 +222,7 @@ export default function SavingsScreen({ user }) {
       </div>
 
       {/* Master Savings Summary Card */}
-      <div className="bg-[#EAE3FA] rounded-3xl p-6 shadow-xs space-y-4">
+      <div className="bg-[#EAE3FA] rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
         <div className="flex justify-between items-center">
           <span className="text-sm font-semibold text-[#574477]">
             Total Saved Across Goals
@@ -233,7 +233,7 @@ export default function SavingsScreen({ user }) {
         </div>
 
         <div>
-          <div className="text-4xl font-black text-[#2C1E4A] tracking-tight">
+          <div className="text-4xl sm:text-5xl font-black text-[#2C1E4A] tracking-tight">
             {formatPHP(totalSaved)}
           </div>
           <p className="text-xs font-semibold text-[#7A7289] mt-1">
@@ -293,7 +293,8 @@ export default function SavingsScreen({ user }) {
             </button>
           </div>
         ) : (
-          goals.map((goal) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          {goals.map((goal) => {
             const isCompleted = goal.currentAmount >= goal.targetAmount;
             const percent = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 100;
             const IconDef = GOAL_ICONS.find(i => i.id === goal.iconId) || GOAL_ICONS[0];
@@ -302,7 +303,7 @@ export default function SavingsScreen({ user }) {
             return (
               <div
                 key={goal.id}
-                className={`bg-white rounded-3xl p-5 border shadow-xs transition-all space-y-4 ${
+                className={`bg-white rounded-3xl p-5 border shadow-xs transition-all space-y-4 flex flex-col justify-between ${
                   isCompleted ? 'border-emerald-200 bg-emerald-50/20' : 'border-[#F0EBF8]'
                 }`}
               >
@@ -386,7 +387,8 @@ export default function SavingsScreen({ user }) {
                 </div>
               </div>
             );
-          })
+          })}
+          </div>
         )}
       </div>
 

@@ -110,13 +110,13 @@ export default function AuthScreen({ onAuthSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F6FC] flex flex-col justify-between px-6 py-8">
+    <div className="min-h-screen bg-[#F8F6FC] flex flex-col justify-between items-center px-6 py-8 sm:py-12">
       {/* Top Branding */}
       <div className="flex flex-col items-center text-center pt-4">
         {/* Logo Card with soft ambient glow */}
         <div className="relative mb-3">
           <div className="absolute -inset-2 bg-[#9B87D4]/30 rounded-full blur-xl" />
-          <div className="relative w-20 h-20 rounded-2xl overflow-hidden shadow-md border border-[#EAE3FA] bg-[#2C1E4A] flex items-center justify-center">
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shadow-md border border-[#EAE3FA] bg-[#2C1E4A] flex items-center justify-center">
             <img 
               src={logoImg} 
               alt="LUNARA Logo" 
@@ -125,16 +125,16 @@ export default function AuthScreen({ onAuthSuccess }) {
           </div>
         </div>
 
-        <h1 className="text-2xl font-black text-[#2C1E4A] tracking-wider">
+        <h1 className="text-2xl sm:text-3xl font-black text-[#2C1E4A] tracking-wider">
           LUNARA
         </h1>
-        <p className="text-xs font-semibold text-[#7A7289] mt-0.5">
+        <p className="text-xs sm:text-sm font-semibold text-[#7A7289] mt-0.5">
           Mindful Personal Finance & Budgeting
         </p>
       </div>
 
-      {/* Auth Card */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-[#F0EBF8] space-y-5 my-auto">
+      {/* Auth Card (Centered & Constrained on Tablet) */}
+      <div className="w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#F0EBF8] space-y-5 my-auto">
         {/* Tab Switcher: Sign In vs Create Account */}
         <div className="flex p-1 bg-[#F8F6FC] rounded-2xl border border-[#F0EBF8]">
           <button
